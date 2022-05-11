@@ -1,29 +1,35 @@
 import React from 'react';
-import { Container, Title } from './styles';
-
 import {
-    useFonts,
-    Poppins_400Regular,
-    Poppins_500Medium,
-    Poppins_700Bold,
-} from '@expo-google-fonts/poppins';
+    Container,
+    Header,
+    UserWrapper,
+    UserInfo,
+    Icon,
+    Photo,
+    User,
+    UserGreeting,
+    UserName,
+} from './styles';
 
-import AppLoading from 'expo-app-loading';
+
 
 export function Dashboard() {
-    const [fontsLoaded] = useFonts({
-        Poppins_400Regular,
-        Poppins_500Medium,
-        Poppins_700Bold
-    });
-
-    if (!fontsLoaded) {
-        return <AppLoading />
-    }
 
     return (
         <Container>
-            <Title>Dashboard</Title>
+            <Header>
+                <UserWrapper>
+                    <UserInfo>
+                        <Photo source={{ uri: 'https://avatars.githubusercontent.com/u/87244758?v=4' }} />
+                        <User>
+                            <UserGreeting>Olá,</UserGreeting>
+                            <UserName>Italo</UserName>
+                        </User>
+                    </UserInfo>
+                    <Icon name='power' />
+                </UserWrapper>
+            </Header>
+
         </Container>
     );
 }
