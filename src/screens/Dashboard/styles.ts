@@ -6,10 +6,6 @@ import { Feather } from '@expo/vector-icons';
 
 import { DataListProps } from '.';
 
-interface IconProps {
-
-} 
-
 export const Container = styled.View`
     flex: 1;
     background-color: ${({ theme }) => theme.colors.background};

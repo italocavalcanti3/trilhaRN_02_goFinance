@@ -37,10 +37,10 @@ export const Category = styled.View`
   align-items: center;
 `;
 
-export const Icon = styled(Feather)`
+export const Icon= styled(Feather)`
   font-size: ${RFValue(20)}px;
   color: ${({theme}) => theme.colors.text};
-`;
+` as unknown as typeof Feather;
 
 export const CategoryName = styled.Text`
   font-size: ${RFValue(14)}px;
