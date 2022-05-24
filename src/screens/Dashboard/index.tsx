@@ -32,14 +32,16 @@ import {
     TransactionList,
     LoadContainer
 } from './styles';
+import { LastTransaction } from '../../components/HighlightCard/styles';
 
 interface HighLightProps {
-    amount: string;
+    amount: string,
+    lastTransaction: string,
 }
 
 interface HighlightData {
     entries: HighLightProps,
-    expensive: HighLightProps,
+    expensives: HighLightProps,
     total: HighLightProps,
 }
 
@@ -49,6 +51,18 @@ export function Dashboard() {
     const [highlightData, setHighlightData] = useState<HighlightData>({} as HighlightData);
 
     const theme = useTheme();
+
+    function getLastTransactionDate(
+        collection: DataListProps[], 
+        type: 'positive' | 'negative'
+    ) {
+        const lastTransaction = new Date(Math.max.apply(Math, collection
+            .filter(transaction => transaction.type === 'positive')
+            .map(transaction => new Date(transaction.date).getTime()))
+        );
+
+        return `${lastTransaction.getDate()} de ${lastTransaction.toLocaleString('pt-BR', {month: 'long'})}`;
+    }
 
     async function loadTransactions() {
         const dataKey = '@gofinances:transactions';
@@ -90,25 +104,32 @@ export function Dashboard() {
             });
         setTransactions(transactionsFormatted);
 
+        const letTransactionEntries = getLastTransactionDate(transactions, 'positive');
+        const letTransactionExpensives = getLastTransactionDate(transactions, 'negative');
+        const totalInterval = `01 à ${letTransactionExpensives}`;
+
         const total = entriesTotal - expensiveTotal;
         setHighlightData({
             entries: {
                 amount: entriesTotal.toLocaleString('pt-BR', {
                     style: 'currency',
                     currency: 'BRL'
-                }).replace('R$', 'R$ ')
+                }).replace('R$', 'R$ '),
+                lastTransaction: `Última entrada dia ${letTransactionEntries}`,
             },
-            expensive: {
+            expensives: {
                 amount: expensiveTotal.toLocaleString('pt-BR', {
                     style: 'currency',
                     currency: 'BRL'
-                }).replace('R$', 'R$ ')
+                }).replace('R$', 'R$ '),
+                lastTransaction: `Última saída dia ${letTransactionExpensives}`,
             },
             total: {
                 amount: total.toLocaleString('pt-BR', {
                     style: 'currency',
                     currency: 'BRL'
-                }).replace('R$', 'R$ ')
+                }).replace('R$', 'R$ '),
+                lastTransaction: totalInterval
             }
         });
 
@@ -132,53 +153,53 @@ export function Dashboard() {
         <Container>
             {
                 isLoading ?
-                <LoadContainer>
-                    <ActivityIndicator color={theme.colors.primary} size='large'/>
-                </LoadContainer> :
-                <>
-                    <Header>
-                        <UserWrapper>
-                            <UserInfo>
-                                <Photo source={{ uri: 'https://avatars.githubusercontent.com/u/87244758?v=4' }} />
-                                <User>
-                                    <UserGreeting>Olá,</UserGreeting>
-                                    <UserName>Italo</UserName>
-                                </User>
-                            </UserInfo>
-                            <Icon name='power' />
-                        </UserWrapper>
-                    </Header>
-                    <HighlightCards>
-                        <HighlightCard
-                            type='up'
-                            title='Entradas'
-                            amount={highlightData?.entries?.amount}
-                            lastTransaction='Última entrada dia 13 de abril'
-                        />
-                        <HighlightCard
-                            type='down'
-                            title='Saídas'
-                            amount={highlightData?.expensive?.amount}
-                            lastTransaction='Última saída dia 13 de abril'
-                        />
-                        <HighlightCard
-                            type='total'
-                            title='Total'
-                            amount={highlightData?.total?.amount}
-                            lastTransaction='01 à 16 de abril'
-                        />
-                    </HighlightCards>
+                    <LoadContainer>
+                        <ActivityIndicator color={theme.colors.primary} size='large' />
+                    </LoadContainer> :
+                    <>
+                        <Header>
+                            <UserWrapper>
+                                <UserInfo>
+                                    <Photo source={{ uri: 'https://avatars.githubusercontent.com/u/87244758?v=4' }} />
+                                    <User>
+                                        <UserGreeting>Olá,</UserGreeting>
+                                        <UserName>Italo</UserName>
+                                    </User>
+                                </UserInfo>
+                                <Icon name='power' />
+                            </UserWrapper>
+                        </Header>
+                        <HighlightCards>
+                            <HighlightCard
+                                type='up'
+                                title='Entradas'
+                                amount={highlightData.entries.amount}
+                                lastTransaction={highlightData.entries.lastTransaction}
+                            />
+                            <HighlightCard
+                                type='down'
+                                title='Saídas'
+                                amount={highlightData.expensives.amount}
+                                lastTransaction={highlightData.expensives.lastTransaction}
+                            />
+                            <HighlightCard
+                                type='total'
+                                title='Total'
+                                amount={highlightData.total.amount}
+                                lastTransaction={highlightData.total.lastTransaction}
+                            />
+                        </HighlightCards>
 
-                    <Transactions>
-                        <Title>Listagem</Title>
-                        <TransactionList
-                            data={transactions}
-                            keyExtractor={item => item.id}
-                            renderItem={({ item }) => <TransactionCard data={item} />}
-                        />
+                        <Transactions>
+                            <Title>Listagem</Title>
+                            <TransactionList
+                                data={transactions}
+                                keyExtractor={item => item.id}
+                                renderItem={({ item }) => <TransactionCard data={item} />}
+                            />
 
-                    </Transactions>
-                </>
+                        </Transactions>
+                    </>
             }
         </Container>
     );
