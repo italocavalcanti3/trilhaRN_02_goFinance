@@ -11,7 +11,7 @@ import {
 import { HistoryCard } from '../../components/HistoryCard';
 import { categories } from '../../utils/categories';
 
-interface TransactionData {
+export interface TransactionData {
   type: 'positive' | 'negative';
   name: string;
   amount: string;
@@ -56,12 +56,12 @@ export function Resume() {
         totalByCategory.push({
           name: category.name,
           total: total,
-          color: category.color
+          color: category.color,
         });
       }
-      setTotalByCategories(totalByCategory);      
     });
-    console.log(totalByCategories);
+    setTotalByCategories(totalByCategory);
+
   }
 
   useEffect(() => {
@@ -70,15 +70,16 @@ export function Resume() {
 
   return (
     <Container>
-      
+
       <Header>
         <Title>Resumo por categoria</Title>
       </Header>
 
       <Content>
+      {console.log(totalByCategories)}
       {
           totalByCategories.map(item => (
-            <HistoryCard 
+            <HistoryCard
               title={item.name}
               amount={item.total}
               color={item.color}
