@@ -20,13 +20,10 @@ export function SignInSocialButton({
 }: Props) {
   return (
     <Button {...rest}>
-
       <ImageContainer>
         <Svg />
       </ImageContainer>
-
       <Title>{title}</Title>
-
     </Button>
   );
 }
