@@ -50,9 +50,15 @@ export function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [transactions, setTransactions] = useState<DataListProps[]>([]);
   const [highlightData, setHighlightData] = useState<HighlightData>({} as HighlightData);
-  const { signOut } = useAuth();
-
+  const { signOut, user } = useAuth();
+  
+  
   const theme = useTheme();
+  
+  function firstName(fullName: string) {
+    const name: string[] = fullName.split(' ');
+    return name[0];
+  }
 
   function getLastTransactionDate(
     collection: DataListProps[],
@@ -162,10 +168,10 @@ export function Dashboard() {
             <Header>
               <UserWrapper>
                 <UserInfo>
-                  <Photo source={{ uri: 'https://avatars.githubusercontent.com/u/87244758?v=4' }} />
+                  <Photo source={{ uri: user.photo }} />
                   <User>
                     <UserGreeting>Olá,</UserGreeting>
-                    <UserName>Italo</UserName>
+                    <UserName>{firstName(user.name)}</UserName>
                   </User>
                 </UserInfo>
                 <LogoutButton onPress={signOut}>
