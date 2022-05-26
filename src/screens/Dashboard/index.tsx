@@ -11,6 +11,7 @@ import { HighlightCard } from '../../components/HighlightCard';
 import { TransactionCard, TransactionCardProps } from '../../components/TransactionCard';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '../../hooks/auth';
 
 export interface DataListProps extends TransactionCardProps {
   id: string;
@@ -30,9 +31,9 @@ import {
   Transactions,
   Title,
   TransactionList,
-  LoadContainer
+  LoadContainer,
+  LogoutButton
 } from './styles';
-import { LastTransaction } from '../../components/HighlightCard/styles';
 
 interface HighLightProps {
   amount: string,
@@ -49,6 +50,7 @@ export function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [transactions, setTransactions] = useState<DataListProps[]>([]);
   const [highlightData, setHighlightData] = useState<HighlightData>({} as HighlightData);
+  const { signOut } = useAuth();
 
   const theme = useTheme();
 
@@ -166,7 +168,9 @@ export function Dashboard() {
                     <UserName>Italo</UserName>
                   </User>
                 </UserInfo>
-                <Icon name='power' />
+                <LogoutButton onPress={signOut}>
+                  <Icon name='power' />
+                </LogoutButton>
               </UserWrapper>
             </Header>
             <HighlightCards>

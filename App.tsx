@@ -12,33 +12,31 @@ import {
   Poppins_700Bold,
 } from '@expo-google-fonts/poppins';
 
-import { NavigationContainer } from '@react-navigation/native';
-import { AppRoutes } from './src/routes/app.routes';
-import { SignIn } from './src/screens/SignIn';
+import { Routes } from './src/routes';
 
-import { AuthProvider } from './src/hooks/auth';
+import { AuthProvider, useAuth } from './src/hooks/auth';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function App() {
+  const { userStorageLoading } = useAuth();
+
   const [fontsLoaded] = useFonts({
     Poppins_400Regular,
     Poppins_500Medium,
     Poppins_700Bold
   });
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || userStorageLoading) {
     return <AppLoading />
   }
   
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider theme={theme}>
-        <NavigationContainer>
           <StatusBar barStyle='light-content' backgroundColor='transparent' translucent />
           <AuthProvider>
-            <SignIn />
+            <Routes />
           </AuthProvider>
-        </NavigationContainer>
       </ThemeProvider>
     </GestureHandlerRootView>
   );
